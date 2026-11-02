@@ -1,0 +1,23 @@
+# Public repositories for the issue-difficulty dataset. One owner/name per line.
+# Chosen for variety (language, size, how maintainers label issues), not because they are "typical".
+# Adding a repository here collects only its public issue metadata (see compass_ml_training/collect.py).
+pallets/flask
+psf/requests
+pandas-dev/pandas
+scikit-learn/scikit-learn
+pytest-dev/pytest
+encode/httpx
+python-poetry/poetry
+matplotlib/matplotlib
+vuejs/core
+microsoft/TypeScript
+prettier/prettier
+eslint/eslint
+gohugoio/hugo
+cli/cli
+prometheus/prometheus
+rust-lang/rust-clippy
+tokio-rs/tokio
+BurntSushi/ripgrep
+nlohmann/json
+rubocop/rubocop

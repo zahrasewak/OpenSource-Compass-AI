@@ -1,0 +1,34 @@
+# secrets / local config
+.env
+*.env.local
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# ML: datasets contain third-party issue text and model files are pickles; neither belongs in git
+/models/
+/backend/models/
+ml-training/data/
+data/*.jsonl
+*.joblib
+*.jsonl
+review*.csv
+
+# databases / logs
+*.db
+*.sqlite3
+
+# extension
+node_modules/
+extension/dist/
+extension/e2e/.tmp*/
+extension/e2e/screenshots/
+extension/e2e/screenshots-real/
+
+# local tooling
+.claude/
+.vscode/
+*.log

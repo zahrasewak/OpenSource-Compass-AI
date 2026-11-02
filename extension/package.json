@@ -1,0 +1,35 @@
+{
+  "name": "opensource-compass-extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome (Manifest V3) extension that shows OpenSource Compass AI analysis on GitHub issue pages",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:production": "node scripts/build.mjs --production",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm test && npm run build",
+    "e2e": "node --no-warnings e2e/run.mjs"
+  },
+  "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.8",
+    "@types/chrome": "0.3.7",
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "jsdom": "29.1.1",
+    "playwright-core": "1.64.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.5",
+    "vitest": "5.0.5"
+  }
+}

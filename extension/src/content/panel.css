@@ -1,0 +1,111 @@
+/* Injected into the panel's shadow root, so nothing here can affect GitHub and GitHub's CSS cannot affect the panel.
+   Colours come from GitHub's own CSS variables (they inherit into shadow DOM) with light-theme fallbacks, so the
+   panel follows GitHub's light/dark mode. State is always also expressed in words, never by colour alone. */
+:host { all: initial; display: block; }
+*, *::before, *::after { box-sizing: border-box; }
+
+.panel {
+  /* Fallbacks used only when GitHub's own variables are absent (layout change, unusual page). They follow the OS scheme. */
+  --fb-fg: #1f2328; --fb-muted: #59636e; --fb-bg: #ffffff; --fb-bg-subtle: #f6f8fa; --fb-border: #d1d9e0;
+  --fb-accent: #0969da; --fb-ok: #1a7f37; --fb-warn: #9a6700; --fb-danger: #d1242f;
+  --fg: var(--fgColor-default, var(--fb-fg));
+  --muted: var(--fgColor-muted, var(--fb-muted));
+  --bg: var(--bgColor-default, var(--fb-bg));
+  --bg-subtle: var(--bgColor-muted, var(--fb-bg-subtle));
+  --border: var(--borderColor-default, var(--fb-border));
+  /* One accent, green (GitHub's own success colours), so the panel reads as part of the page and not as a foreign widget. */
+  --accent: var(--fgColor-success, var(--fb-ok));
+  --primary: var(--button-primary-bgColor-rest, #1f883d);
+  --primary-hover: var(--button-primary-bgColor-hover, #1a7f37);
+  --primary-fg: var(--button-primary-fgColor-rest, #ffffff);
+  --ok: var(--fgColor-success, var(--fb-ok));
+  --warn: var(--fgColor-attention, var(--fb-warn));
+  --danger: var(--fgColor-danger, var(--fb-danger));
+  font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin: 0 0 16px;
+  max-width: 100%;
+}
+@media (prefers-color-scheme: dark) {
+  .panel {
+    --fb-fg: #f0f6fc; --fb-muted: #9198a1; --fb-bg: #0d1117; --fb-bg-subtle: #151b23; --fb-border: #3d444d;
+    --fb-accent: #4493f8; --fb-ok: #3fb950; --fb-warn: #d29922; --fb-danger: #f85149;
+  }
+}
+.panel.floating {
+  position: fixed; right: 16px; bottom: 16px; width: 360px; max-height: 80vh; overflow: auto; z-index: 90;
+  box-shadow: 0 8px 24px rgba(31, 35, 40, 0.2);
+}
+@media (max-width: 600px) { .panel.floating { left: 8px; right: 8px; width: auto; } }
+
+.panel-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--border); background: var(--bg-subtle); flex-wrap: wrap; }
+.brand { font-size: 13px; }
+.mark { vertical-align: -3px; margin-right: 4px; color: var(--accent); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.panel-footer { padding: 8px 12px; border-top: 1px solid var(--border); font-size: 11px; }
+.section { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.section-title { font-size: 13px; margin: 0 0 6px; }
+h3, h4 { margin: 8px 0 4px; font-size: 12px; }
+.muted { color: var(--muted); font-size: 12px; margin: 2px 0; }
+p { margin: 4px 0; }
+ul { margin: 4px 0; padding-left: 18px; }
+.issue-title { font-weight: 600; margin: 0; overflow-wrap: anywhere; }
+
+.score-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0; flex-wrap: wrap; }
+.big-score { font-size: 28px; font-weight: 600; line-height: 1; }
+.big-score small { font-size: 13px; color: var(--muted); font-weight: 400; }
+.badges { display: flex; gap: 4px; flex-wrap: wrap; }
+.badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); white-space: nowrap; }
+.badge-heuristic { border-color: var(--accent); color: var(--accent); }
+.badge-experimental { border-style: dashed; border-color: var(--warn); color: var(--warn); }
+.badge-warn { border-color: var(--warn); color: var(--warn); }
+.badge-ok { border-color: var(--ok); color: var(--ok); }
+
+.components { list-style: none; padding: 0; margin: 6px 0; }
+.components li { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 3px 0; }
+.comp-name { overflow-wrap: anywhere; }
+.comp-weight { color: var(--muted); font-size: 11px; white-space: nowrap; }
+.meter-wrap { display: inline-flex; align-items: center; gap: 6px; }
+.meter { display: inline-block; width: 70px; height: 8px; background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.meter-fill { display: block; height: 100%; background: var(--accent); }
+.meter-num { min-width: 22px; text-align: right; font-variant-numeric: tabular-nums; }
+.unknown { color: var(--muted); font-style: italic; }
+
+.notice { border: 1px solid var(--border); border-left-width: 4px; border-radius: 4px; padding: 6px 10px; margin: 6px 0; background: var(--bg-subtle); }
+.notice-warn { border-left-color: var(--warn); }
+.notice-error { border-left-color: var(--danger); }
+.notice ul { margin: 0; }
+.warnings li::marker { color: var(--warn); }
+.loading { color: var(--muted); display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+.spinner { width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } button { transition: none; } }
+
+.collapsible { border-bottom: 1px solid var(--border); padding: 6px 12px; }
+.collapsible-title { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 13px; flex-wrap: wrap; }
+.collapsible .collapsible { border: 0; padding: 4px 0; }
+.collapsible-button { all: unset; cursor: pointer; font-weight: 600; padding: 2px 0; }
+.collapsible-button:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+.chevron { display: inline-block; width: 12px; }
+
+button { font: inherit; font-size: 12px; padding: 3px 10px; color: var(--fg); background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: background-color 0.12s, border-color 0.12s; }
+button:hover:not(:disabled):not([aria-disabled="true"]) { border-color: var(--accent); }
+button:active:not(:disabled) { transform: translateY(1px); }
+button.primary { background: var(--primary); border-color: var(--primary); color: var(--primary-fg); font-weight: 600; padding: 4px 14px; }
+button.primary:hover:not(:disabled) { background: var(--primary-hover); border-color: var(--primary-hover); }
+button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+button.is-disabled, button[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
+.collapsible-button { all: unset; cursor: pointer; font-weight: 600; padding: 2px 0; }
+.row-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 4px 0; }
+fieldset { border: 0; padding: 0; margin: 6px 0; min-width: 0; }
+legend { padding: 0; font-weight: 600; font-size: 12px; }
+.block { margin: 6px 0; }
+a { color: var(--accent); }
+
+.verdict { margin: 2px 0 6px; font-weight: 500; }
+.mini { margin: 8px 0 2px; font-size: 12px; font-weight: 600; }
+.save-bar { padding-top: 8px; padding-bottom: 8px; }

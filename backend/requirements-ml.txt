@@ -1,0 +1,7 @@
+# Optional ML dependencies (CPU only). The lightweight backend does NOT need these:
+# without them the difficulty model is reported as unavailable and the deterministic signals keep working.
+# Install on top of requirements.txt:   pip install -r requirements-ml.txt
+scikit-learn==1.9.1
+numpy==2.5.4
+scipy==1.18.1
+joblib==1.6.0

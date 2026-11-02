@@ -1,0 +1,65 @@
+# Stored matches, events and feedback: data for future evaluation
+
+Status: **data collection only.** No model has been trained on this data, nothing derives training
+labels automatically, and no evaluation has been run. Everything below describes how the stored
+data is meant to be used later.
+
+## What is stored
+
+### `recommendations` (one row per scored issue per user, append-only)
+| Column | Meaning |
+|---|---|
+| `ranking_model_version` | Scoring method id, e.g. `heuristic_v1` (`<kind>_<version>`); a future model would be e.g. `ml_xgb_2026a` |
+| `final_score`, `skill_score` … `readiness_score`, `coverage`, `insufficient_information` | Raw component scores (NULL = unknown at the time, never 0), final score, evidence coverage |
+| `components` (JSON) | Full explanation as shown to the user: per-component status/confidence/effective score/evidence/warnings, reasons, warnings, missing skills, model info, **scoring config** (weights, fill value, thresholds) |
+| `data_snapshot` (JSON) | The exact `UserFeatures` and `IssueFeatures` that were scored, including `repo_fetched_at` / `issue_fetched_at` data timestamps and `scored_at` |
+| `input_hash` | SHA-256 over method id, config, inputs and outputs (no wall-clock timestamps) |
+| `created_at` | When the match was generated |
+
+Rules:
+- **Immutable.** No code path updates a stored score. `GET /matches/{id}` returns the stored explanation and never rescores.
+- **Idempotent.** Unique on `(user_id, issue_id, ranking_model_version, input_hash)`: a retried request or an unchanged re-search reuses the row. Changed profile, issue data, config or resulting scores add a new row, so history accumulates.
+- **No silent formula changes.** The method id is part of the row; a test pins a digest of the scoring code per version and fails if the code changes without a version bump (`SCORING_CODE_DIGESTS` in `tests/test_match_store.py`). The stored config is a second safeguard if someone only changes weights.
+- **Reproducibility is partial.** The snapshot contains the scored inputs (title, body up to 5,000 chars, labels, topics, language, push date, profile skills/interests/target difficulty). A heuristic result can be re-derived from it with the matching code version and `scored_at` as "now". Anything not in the snapshot (e.g. later issue edits, comments, linked PRs) is not recoverable. Snapshots grow with every distinct score; no retention policy exists yet.
+- Only the returned page of a search is stored (not every scored candidate), and only if `persist` is true (default).
+
+### `feedback` (raw, append-only)
+| `category` | `source` | `feedback_type` (value) |
+|---|---|---|
+| `explicit_feedback` | `user` | `relevance` (+1 relevant / -1 not), `difficulty` (-1 too easy / 0 appropriate / +1 too difficult), `interest` (+1 / -1) |
+| `event` | `system` | `saved` (1), `unsaved` (0), written by the server when the user saves/unsaves |
+| `event` | `self_reported` | `attempted`, `contributed` (1): **unverified claims by the user** |
+
+`recommendation_id` links a record to the match it was given about (NULL if given about an issue directly).
+Re-submitting the user's latest identical answer for the same issue/match/type stores nothing; changing
+an answer adds a row, so the sequence of opinions is preserved. There is no uniqueness constraint,
+so two simultaneous identical submissions could both be stored.
+
+## Keeping raw data separate from labels
+`feedback` and `recommendations` are observations. **Training labels are not stored here.** Any label
+(e.g. "good recommendation") must be derived offline in `ml-training` by a versioned, documented rule,
+with human review of a sample, producing a separate artifact that records which rule and data
+snapshot it came from. Nothing in the API retrains or tunes a model from this data.
+
+## Known biases and cautions
+- **Selection / presentation bias.** Users only react to what they were shown, and mostly to items that
+  already look good; items never shown have no feedback. Ranking position strongly affects clicks,
+  saves and ratings. Any model trained on this data will learn the previous ranker's preferences.
+- **Positive skew.** People rarely mark things "not relevant"; missing feedback is not negative feedback.
+- **A save is not success.** Saved/`interested`/`relevant` do not mean the user attempted or completed a
+  contribution. `attempted` and `contributed` are unverified; a merged PR has not been confirmed by
+  any GitHub check. Do not use them as ground truth without verification (e.g. authorised PR lookup).
+- **Self-referential data.** `heuristic_v1` scores were produced by hand-written rules; agreement with
+  user feedback measures usefulness to those users, not correctness.
+- **Small, individual samples.** Per-user data is sparse; pooling users mixes very different tastes.
+- **Counterfactuals are missing.** Comparing `heuristic_v1` with a later model offline needs matches
+  generated by both on the same issues (the schema supports this: same user/issue, different
+  `ranking_model_version`), plus ideally randomised exposure to reduce position bias.
+
+## Privacy
+- Stored issue text comes only from repositories GitHub reports as public; private repositories are
+  never stored. Snapshots contain the user's own profile data and are visible only to that user via
+  the API (all reads filter on `user_id`; other users' ids return 404).
+- `recommendations` and `feedback` rows cascade-delete with the user. Using this data for model
+  training or sharing it across users needs explicit consent and a documented process first (not
+  implemented).

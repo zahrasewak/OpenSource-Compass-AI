@@ -1,0 +1,81 @@
+record_id,difficulty_1_to_5,confidence,annotator,notes
+062be3a46c0d9347,3,medium,llm_claude_1,printer logic for selector syntax
+06d036f148a2cd19,3,low,llm_claude_1,"plugin interaction, unclear owner"
+06fb981647bdc075,2,medium,llm_claude_1,"tooling replacement, clearly scoped"
+0e23cefe0a753355,3,low,llm_claude_1,lint-design discussion
+0ecff2289c8b4838,2,medium,llm_claude_1,build file edit
+17bdd01c51ac0319,3,low,llm_claude_1,"feature blocked by maintainer policy, not just implementation"
+1aeb4b9d1a3ed070,2,medium,llm_claude_1,default change with compatibility question
+1b3438c111579746,3,medium,llm_claude_1,marker parsing in a core library
+1bfc85646e1713e7,2,low,llm_claude_1,body empty; likely a warning in the imputer plus tests
+1f212027d104e357,skip,high,llm_claude_1,bot-generated dependency dashboard
+21c723f2fa72483c,3,medium,llm_claude_1,"bug in two scalers, needs tests"
+227150f2786e8e83,3,medium,llm_claude_1,gitignore semantics in ignore crate
+27a5b115f8a165d8,3,medium,llm_claude_1,numeric edge cases in pandas internals
+2974db31b6e43d3a,3,low,llm_claude_1,embedded-language formatting
+298bfbbc4180a5ff,4,low,llm_claude_1,lint interaction needs type inference
+34cd8c649fbf11c3,1,medium,llm_claude_1,comment tag typo in generated docs
+435c52ee9b1c1627,2,low,llm_claude_1,docs requiring platform knowledge
+4ae7735ffca55cc5,skip,high,llm_claude_1,empty issue template
+4bc15d7153fb5948,3,medium,llm_claude_1,"new lint rule, template exists"
+4c39c6a58d3b7344,2,low,llm_claude_1,release infrastructure rather than code
+51dd8d9657bc649f,2,medium,llm_claude_1,docs requiring library knowledge
+5349820b67e46e0e,2,low,llm_claude_1,may already be supported; unclear
+53bb9ee28b6c0804,3,medium,llm_claude_1,new writer subclass with tests
+545067ad5a104c74,2,medium,llm_claude_1,json.dumps options; small API decision
+5698bcd02a60efd0,2,medium,llm_claude_1,"encode credentials, fix suggested"
+5713f7095ac6f8b8,3,medium,llm_claude_1,language service completions
+58c6d31a072cbaac,2,medium,llm_claude_1,"bug in one function, location given"
+58d7196ad17013c6,4,low,llm_claude_1,filesystem-specific storage behaviour
+5b5a3c7146244e20,3,medium,llm_claude_1,new client option and API design
+5cc5de97e0b5a84d,3,medium,llm_claude_1,new accessor method with tests and docs
+5d34ce6669a610a7,2,medium,llm_claude_1,"input validation panic, location evident"
+609c61c9ed921ba2,3,medium,llm_claude_1,printer parenthesization rules
+676956248676d630,2,medium,llm_claude_1,remove unused public method with docs and tests
+692837f04a25f5c1,3,medium,llm_claude_1,cache-directory logic change
+6b9c60a94698d3c3,2,low,llm_claude_1,"umbrella cleanup, each item small"
+6d65ef676c4ec418,2,medium,llm_claude_1,mechanical but needs per-case judgement
+6d832c8a6827f6a7,4,medium,llm_claude_1,new CLI capability touching file-access design
+6fd2c1f5fa5c3233,4,medium,llm_claude_1,semantic design change across ignore handling
+729da9ba7e56d84b,2,medium,llm_claude_1,deduplicate identical skills
+743acb0fee2a75fc,3,medium,llm_claude_1,semantic classification in language service
+74aa70ccc5161933,2,medium,llm_claude_1,dependency bump in a release branch
+785e5b9ec40f9e57,3,low,llm_claude_1,design debate about warning behaviour
+78c1534455dc83dc,1,medium,llm_claude_1,docs cross-reference
+7c80fda2289adfc0,4,medium,llm_claude_1,scheduler metrics semantics
+7f069d19f54f85ea,4,medium,llm_claude_1,experimental SSR hydration regression
+8692aed3f1153cf9,3,low,llm_claude_1,language service feature
+87ca575de0064329,4,low,llm_claude_1,runtime internals on an experimental platform
+88d9da8f77bfbce5,2,medium,llm_claude_1,cause and fix location given
+8a88d8d04f516b33,3,medium,llm_claude_1,compare before write in build pipeline
+902e7ce6bb0a5c6b,3,medium,llm_claude_1,extends version command; prerelease syntax design
+a824985162b7fe41,3,medium,llm_claude_1,language service behaviour
+ac19f22b9af1d573,4,medium,llm_claude_1,new lint needing ownership analysis
+ae01320f78c21508,3,medium,llm_claude_1,reactivity option regression
+ae1522065d0c8075,1,high,llm_claude_1,broken link
+b3ae6a2a36780910,4,medium,llm_claude_1,storage engine design; proposal needs maintainer decision
+b666f161db4656f2,1,high,llm_claude_1,documentation correction
+b6aecfff884bb3c1,2,medium,llm_claude_1,small display change
+b87685604d0e665e,3,low,llm_claude_1,unclear whether client or server issue
+b904f0f69f47b40d,1,high,llm_claude_1,missing docs entry
+c5b2e5459722b3d0,2,low,llm_claude_1,"old issue, may be obsolete"
+c7cf4a9a5610a354,2,medium,llm_claude_1,"flaky test from port reuse, fix evident"
+ca3d44da02205d71,4,medium,llm_claude_1,"runtime internals, re-entrancy"
+d166d16685bc82aa,1,high,llm_claude_1,documentation wording
+d1fec0c672ee3a18,skip,high,llm_claude_1,spam
+d2f1606764fbcf19,3,low,llm_claude_1,only the template is visible in the excerpt
+d72471ddefb7a726,1,high,llm_claude_1,outdated docs link
+dba5ae0848a59ab3,4,medium,llm_claude_1,concurrency race in runtime
+dbf7f7fd204e3783,3,medium,llm_claude_1,platform-specific failures need a 32-bit environment
+dfd26053e7823356,1,high,llm_claude_1,remove unused import
+e81f56f3d1304a31,4,medium,llm_claude_1,"TLS context regression, security-sensitive"
+e9d3ac2958728f5d,2,medium,llm_claude_1,extend a docs example with code
+ed00008d28ff0398,3,medium,llm_claude_1,extend lint to another type; needs lint utilities
+ef3ad8b2da269750,2,medium,llm_claude_1,display-only change in reporter
+f0fa14ada1f15b71,2,medium,llm_claude_1,static-analysis warnings in C++
+f1cd830d12e68e4a,skip,high,llm_claude_1,"support request in Russian, no actionable task"
+f8e9f8c9633c6bab,2,medium,llm_claude_1,add a missing assertion in a test
+f968cfd764da843c,3,medium,llm_claude_1,C++ extension edge case
+fa005324691fe7c0,4,medium,llm_claude_1,renderer internals and lifecycle
+fa4ae32d92e20d67,3,medium,llm_claude_1,refactor of a header-only library
+fdc8b0723afedce2,skip,high,llm_claude_1,spam

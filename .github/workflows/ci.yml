@@ -1,0 +1,62 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  # Lightweight install (no ML packages): ML tests skip, everything else must pass.
+  backend-tests:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: backend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12.6", cache: pip }
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+
+  # Optional ML dependencies installed: the whole suite including training/inference (synthetic data only).
+  backend-tests-ml:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: backend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12.6", cache: pip }
+      - run: pip install -r requirements-dev.txt -r requirements-ml.txt
+      - run: python -m pytest -q
+
+  # Browser extension: type-check, unit/component tests, build (which verifies packaging and security invariants).
+  extension:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: extension } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "24", cache: npm, cache-dependency-path: extension/package-lock.json }
+      - run: npm ci
+      - run: npm run check
+
+  # Validates the Alembic migrations, the schema and the WHOLE test suite against a real PostgreSQL server.
+  # The steps live in backend/scripts/validate_postgres.py so that a developer can run exactly the same thing locally
+  # (docs/POSTGRES_VALIDATION.md). STATUS: this job has NOT run yet (the project is not on GitHub); the same script was run
+  # locally against PostgreSQL 16.2 (docs/evidence/). Until this job succeeds on the official postgres:16 image, validation
+  # on that environment is pending.
+  migrations-postgres:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: backend } }
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_USER: compass, POSTGRES_PASSWORD: compass, POSTGRES_DB: compass }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U compass" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12.6", cache: pip }
+      - run: pip install -r requirements-dev.txt
+      # Optional ML packages are not installed here: the ML tests skip, everything else (including the database tests) runs.
+      - run: python scripts/validate_postgres.py postgresql://compass:compass@localhost:5432 --log pg-validation.md
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: pg-validation-log, path: backend/pg-validation.md }
